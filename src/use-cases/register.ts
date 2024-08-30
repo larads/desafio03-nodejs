@@ -1,4 +1,5 @@
 import { hash } from 'bcryptjs'
+import { Organization } from '@prisma/client'
 import { OrganizationsRepository } from '../repositories/organizations-repository'
 import { OrganizationAlreadyExists } from './errors/organization-already-exists-error'
 
@@ -12,6 +13,9 @@ interface RegisterUseCaseParams {
     postal_code: string
 }
 
+interface OrganizationRegisterUseCaseResponse {
+    organization: Organization
+}
 export class RegisterUseCase {
     constructor(private organizationsRepository: OrganizationsRepository) { }
 
@@ -23,7 +27,7 @@ export class RegisterUseCase {
         address,
         city,
         postal_code,
-    }: RegisterUseCaseParams) {
+    }: RegisterUseCaseParams): Promise<OrganizationRegisterUseCaseResponse> {
         const password_hash = await hash(password, 6)
 
         const organizationWithSameEmailOrName =
@@ -33,7 +37,7 @@ export class RegisterUseCase {
             throw new OrganizationAlreadyExists()
         }
 
-        await this.organizationsRepository.create({
+        const organization = await this.organizationsRepository.create({
             name,
             responsable_name,
             email,
@@ -42,5 +46,9 @@ export class RegisterUseCase {
             city,
             postal_code,
         })
+
+        return {
+            organization,
+        }
     }
 }
