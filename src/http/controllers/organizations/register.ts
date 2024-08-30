@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { RegisterUseCase } from '../../../use-cases/register'
+import { OrganizationAlreadyExists } from '../../../use-cases/errors/organization-already-exists-error'
 import { PrismaOrganizationsRepository } from '../../../repositories/prisma/prisma-organizations-repository'
 
 export async function register(
@@ -41,7 +42,13 @@ export async function register(
             postal_code,
         })
     } catch (err) {
-        return response.status(409).send()
+        if (err instanceof OrganizationAlreadyExists) {
+            return response.status(409).send({
+                message: err.message,
+            })
+        }
+
+        throw err
     }
 
     return response.status(201).send()

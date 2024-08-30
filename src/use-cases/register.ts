@@ -1,5 +1,6 @@
 import { hash } from 'bcryptjs'
 import { OrganizationsRepository } from '../repositories/organizations-repository'
+import { OrganizationAlreadyExists } from './errors/organization-already-exists-error'
 
 interface RegisterUseCaseParams {
     name: string
@@ -29,7 +30,7 @@ export class RegisterUseCase {
             await this.organizationsRepository.findByEmailOrName(email, name)
 
         if (organizationWithSameEmailOrName) {
-            throw new Error('E-mail or name already exists.')
+            throw new OrganizationAlreadyExists()
         }
 
         await this.organizationsRepository.create({
