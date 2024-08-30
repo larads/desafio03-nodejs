@@ -41,15 +41,17 @@ model Pet {
 }
 
 model Organization {
-  id              String   @id @default(uuid())
-  name            String   @unique
-  resposible_name String
-  email           String   @unique
-  password_hash   String
-  address         String
-  postal_code     String
-  created_at      DateTime @default(now())
-  Pets            Pet[]
+  id               String   @id @default(uuid())
+  name             String   @unique
+  responsable_name String
+  email            String   @unique
+  password_hash    String
+  address          String
+  city             String
+  postal_code      String
+  created_at       DateTime @default(now())
+
+  Pets Pet[]
 
   @@map("organizations")
 }
