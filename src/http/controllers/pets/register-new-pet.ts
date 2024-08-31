@@ -19,26 +19,16 @@ export async function registerNewPet(
     const { name, description, age, energy_level, size, organization_id } =
         registerNewPetBodySchema.parse(request.body)
 
-    try {
-        const registerNewPetUseCase = makeRegisterNewPetUseCase()
+    const registerNewPetUseCase = makeRegisterNewPetUseCase()
 
-        await registerNewPetUseCase.execute({
-            name,
-            description,
-            age,
-            energy_level,
-            size,
-            organization_id,
-        })
-    } catch (err) {
-        if (err instanceof ResourceNotFoundError) {
-            return response.status(409).send({
-                message: err.message,
-            })
-        }
+    const { pet } = await registerNewPetUseCase.execute({
+        name,
+        description,
+        age,
+        energy_level,
+        size,
+        organization_id,
+    })
 
-        throw err
-    }
-
-    return response.status(201).send()
+    return response.status(201).send({ pet })
 }
