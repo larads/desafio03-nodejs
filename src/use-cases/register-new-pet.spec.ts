@@ -15,7 +15,7 @@ describe('Register New Pet Use Case', () => {
         organizationRepository = new InMemoryOrganizationsRepository()
         petRepository = new InMemoryPetsRepository()
 
-        sut = new RegisterNewPetUseCase(petRepository, organizationRepository)
+        sut = new RegisterNewPetUseCase(organizationRepository, petRepository)
 
         await organizationRepository.create({
             id: 'organization-1',

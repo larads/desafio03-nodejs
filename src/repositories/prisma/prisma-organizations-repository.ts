@@ -43,7 +43,7 @@ export class PrismaOrganizationsRepository implements OrganizationsRepository {
     }
 
     async findById(id: string) {
-        const organization = await prisma.organization.findUnique({
+        const organization = await prisma.organization.findFirst({
             where: {
                 id,
             },
