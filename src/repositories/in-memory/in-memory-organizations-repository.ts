@@ -54,4 +54,10 @@ export class InMemoryOrganizationsRepository
 
         return organization
     }
+
+    async findPetsByCity(city: string) {
+        return this.items.filter(
+            (item) => item.city.toLocaleLowerCase() === city.toLocaleLowerCase(),
+        )
+    }
 }
